@@ -68,4 +68,15 @@ public class Market {
         this.transactions = transactions;
     }
 
+    @Override
+    public String toString() {
+        return "Market{" +
+                "exchange=" + exchange +
+                ", exports=" + exports +
+                ", imports=" + imports +
+                ", symbol='" + symbol + '\'' +
+                ", tradeGoods=" + tradeGoods +
+                ", transactions=" + transactions +
+                '}';
+    }
 }

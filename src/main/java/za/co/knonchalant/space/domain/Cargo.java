@@ -65,4 +65,13 @@ public class Cargo {
         }
         return filteredInventory;
     }
+
+    @Override
+    public String toString() {
+        return "Cargo{" +
+                "capacity=" + capacity +
+                ", inventory=" + inventory +
+                ", units=" + units +
+                '}';
+    }
 }

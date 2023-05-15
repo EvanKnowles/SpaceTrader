@@ -18,20 +18,7 @@ public class Tutorial {
     static String settingsLocation = "C:\\dev\\projects\\SpaceTrader\\settings-test.json";
 
     public static void main(String[] args) throws IOException {
-        Spacer api;
-        if (!Files.exists(Path.of(settingsLocation))) {
-            // register as an agent if we haven't before
-            api = Spacer.register("Viat-Test", "COSMIC");
-
-            // persist our token locally
-            Settings settings = new Settings();
-            settings.setToken(api.getToken());
-            settings.persist(settingsLocation);
-        } else {
-            // so we can re-run this class
-            Settings settings = Settings.get(settingsLocation);
-            api = Spacer.token(settings.getToken());
-        }
+        Spacer api = registerOrLogin();
 
         // view your agent details again
         Agent agent = api.agent();
@@ -125,6 +112,24 @@ public class Tutorial {
             }
         }
 
+    }
+
+    private static Spacer registerOrLogin() throws IOException {
+        Spacer api;
+        if (!Files.exists(Path.of(settingsLocation))) {
+            // register as an agent if we haven't before
+            api = Spacer.register("Viat-Test", "COSMIC");
+
+            // persist our token locally
+            Settings settings = new Settings();
+            settings.setToken(api.getToken());
+            settings.persist(settingsLocation);
+        } else {
+            // so we can re-run this class
+            Settings settings = Settings.get(settingsLocation);
+            api = Spacer.token(settings.getToken());
+        }
+        return api;
     }
 
     private static void waitForCoolDown(Cooldown cooldown) {
