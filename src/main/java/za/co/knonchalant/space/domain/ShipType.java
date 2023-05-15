@@ -17,10 +17,4 @@ public class ShipType {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "ShipType{" +
-                "type='" + type + '\'' +
-                '}';
-    }
 }

@@ -1,9 +1,7 @@
 
 package za.co.knonchalant.space.domain;
 
-
 import com.google.gson.annotations.Expose;
-
 
 @SuppressWarnings("unused")
 public class Frame {

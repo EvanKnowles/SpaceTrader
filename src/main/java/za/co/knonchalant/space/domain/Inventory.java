@@ -49,4 +49,8 @@ public class Inventory {
         this.units = units;
     }
 
+    @Override
+    public String toString() {
+        return units + " " + symbol;
+    }
 }

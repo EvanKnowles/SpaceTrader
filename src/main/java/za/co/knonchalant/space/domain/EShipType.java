@@ -15,4 +15,22 @@ public enum EShipType {
     public boolean is(String type) {
         return this.name().equals(type);
     }
+
+    public boolean in(Shipyard shipyard) {
+        for (ShipType shipType : shipyard.getShipTypes()) {
+            if (is(shipType.getType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public AvailableShip get(Shipyard shipyard) {
+        for (AvailableShip availableShip : shipyard.getShips()) {
+            if (is(availableShip.getType())) {
+                return availableShip;
+            }
+        }
+        return null;
+    }
 }

@@ -3,11 +3,13 @@ package za.co.knonchalant.space.domain;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Date;
+
 @SuppressWarnings("unused")
 public class Cooldown {
 
     @Expose
-    private String expiration;
+    private Date expiration;
     @Expose
     private Long remainingSeconds;
     @Expose
@@ -15,11 +17,11 @@ public class Cooldown {
     @Expose
     private Long totalSeconds;
 
-    public String getExpiration() {
+    public Date getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(String expiration) {
+    public void setExpiration(Date expiration) {
         this.expiration = expiration;
     }
 

@@ -4,6 +4,8 @@ package za.co.knonchalant.space.domain;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Objects;
+
 
 @SuppressWarnings("unused")
 public class Contract {
@@ -90,5 +92,18 @@ public class Contract {
                 ", terms=" + terms +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contract contract = (Contract) o;
+        return Objects.equals(id, contract.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -41,10 +41,6 @@ public class Trait {
 
     @Override
     public String toString() {
-        return "Trait{" +
-                "description='" + description + '\'' +
-                ", name='" + name + '\'' +
-                ", symbol='" + symbol + '\'' +
-                '}';
+        return name + " (" + symbol + ")";
     }
 }

@@ -1,7 +1,9 @@
 
 package za.co.knonchalant.space.domain;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
 @SuppressWarnings("unused")
@@ -40,10 +42,27 @@ public class Cargo {
 
     public Inventory find(ETradeSymbol target) {
         for (Inventory inventory1 : inventory) {
-            if (target.is(inventory1)){
+            if (target.is(inventory1)) {
                 return inventory1;
             }
         }
         return null;
+    }
+
+    public List<Inventory> filter(ETradeSymbol... removeSymbols) {
+        ArrayList<Inventory> filteredInventory = new ArrayList<>();
+        for (Inventory inventory1 : inventory) {
+            boolean keep = true;
+            for (ETradeSymbol removeSymbol : removeSymbols) {
+                if (removeSymbol.is(inventory1.getSymbol())) {
+                    keep = false;
+                    break;
+                }
+            }
+            if (keep) {
+                filteredInventory.add(inventory1);
+            }
+        }
+        return filteredInventory;
     }
 }

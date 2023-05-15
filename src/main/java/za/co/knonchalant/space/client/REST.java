@@ -27,10 +27,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * <p>Title: REST</p>
@@ -48,6 +45,12 @@ public class REST implements Serializable {
     private static final String UTF_8 = "UTF-8";
     private static final String APPLICATION_JSON = "application/json";
     private static final String AUTHORIZATION_TYPE_BEARER = "Bearer ";
+
+    private static final long MAX_CALLS = 2;
+    private static final long MAX_TIME = 2_000;
+
+    private static final List<Call> calls = new ArrayList<>();
+
     // Standard user-agent that no-one will reject - could be customized if need be.
     private String userAgent = "Mozilla/5.0";
     private String charset = UTF_8;
@@ -66,6 +69,8 @@ public class REST implements Serializable {
     private Integer connectTimeoutInMs = null;
 
     private JsonDeserializer<?> deserializer;
+
+
 
     /**
      * Private constructor
@@ -303,6 +308,27 @@ public class REST implements Serializable {
      * @return deserialized verb
      */
     public <T> T verb(Type clazz, EVerb verb) throws IOException {
+
+        while (calls.size() >= MAX_CALLS) {
+            for (int i = 0; i < calls.size(); ) {
+                Call call = calls.get(i);
+                if (call.getTime() < System.currentTimeMillis() - MAX_TIME) {
+                    calls.remove(i);
+                } else {
+                    i++;
+                }
+            }
+            if (calls.size() >= MAX_CALLS) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        calls.add(new Call(System.currentTimeMillis()));
+
         final String response = doConnection(verb);
         GsonBuilder gsonBuilder = new GsonBuilder();
         if (deserializer != null) {

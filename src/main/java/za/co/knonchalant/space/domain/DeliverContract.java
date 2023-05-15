@@ -1,10 +1,8 @@
 
 package za.co.knonchalant.space.domain;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
-@Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class DeliverContract {
 
@@ -14,6 +12,12 @@ public class DeliverContract {
     private String tradeSymbol;
     @Expose
     private Long units;
+
+    public DeliverContract(String tradeSymbol, String shipSymbol, long units) {
+        this.tradeSymbol = tradeSymbol;
+        this.shipSymbol = shipSymbol;
+        this.units = units;
+    }
 
     public String getShipSymbol() {
         return shipSymbol;

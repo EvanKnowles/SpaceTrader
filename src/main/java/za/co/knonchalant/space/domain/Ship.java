@@ -1,6 +1,7 @@
 
 package za.co.knonchalant.space.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -122,18 +123,10 @@ public class Ship {
 
     @Override
     public String toString() {
-        return "Ship{" +
-                "cargo=" + cargo +
-                ", crew=" + crew +
-                ", engine=" + engine +
-                ", frame=" + frame +
-                ", fuel=" + fuel +
-                ", modules=" + modules +
-                ", mounts=" + mounts +
-                ", nav=" + nav +
-                ", reactor=" + reactor +
-                ", registration=" + registration +
-                ", symbol='" + symbol + '\'' +
-                '}';
+        return symbol + " " + getNav().getSystemSymbol() + " - " + getNav().getWaypointSymbol();
+    }
+
+    public boolean inTransit() {
+        return getNav().getRoute().getArrival().after(new Date());
     }
 }

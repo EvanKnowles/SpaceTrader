@@ -1,6 +1,7 @@
 
 package za.co.knonchalant.space.domain;
 
+import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
@@ -8,6 +9,8 @@ import com.google.gson.annotations.Expose;
 @SuppressWarnings("unused")
 public class Mount {
 
+    @Expose
+    private List<String> deposits;
     @Expose
     private String description;
     @Expose
@@ -18,6 +21,14 @@ public class Mount {
     private Long strength;
     @Expose
     private String symbol;
+
+    public List<String> getDeposits() {
+        return deposits;
+    }
+
+    public void setDeposits(List<String> deposits) {
+        this.deposits = deposits;
+    }
 
     public String getDescription() {
         return description;

@@ -1,9 +1,7 @@
 
 package za.co.knonchalant.space.domain;
 
-
 import com.google.gson.annotations.Expose;
-
 
 @SuppressWarnings("unused")
 public class Module {
@@ -14,6 +12,8 @@ public class Module {
     private String description;
     @Expose
     private String name;
+    @Expose
+    private Long range;
     @Expose
     private Requirements requirements;
     @Expose
@@ -41,6 +41,14 @@ public class Module {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getRange() {
+        return range;
+    }
+
+    public void setRange(Long range) {
+        this.range = range;
     }
 
     public Requirements getRequirements() {

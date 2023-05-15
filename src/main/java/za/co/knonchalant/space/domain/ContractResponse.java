@@ -3,17 +3,19 @@ package za.co.knonchalant.space.domain;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class ContractResponse {
 
     @Expose
-    private Contract data;
+    private List<Contract> data;
 
-    public Contract getData() {
+    public List<Contract> getData() {
         return data;
     }
 
-    public void setData(Contract data) {
+    public void setData(List<Contract> data) {
         this.data = data;
     }
 

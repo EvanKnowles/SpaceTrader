@@ -1,18 +1,18 @@
 
 package za.co.knonchalant.space.domain;
 
+import java.util.Date;
 import java.util.List;
-import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 
-@Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class Survey {
 
     @Expose
     private List<Deposit> deposits;
     @Expose
-    private String expiration;
+    private Date expiration;
     @Expose
     private String signature;
     @Expose
@@ -28,11 +28,11 @@ public class Survey {
         this.deposits = deposits;
     }
 
-    public String getExpiration() {
+    public Date getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(String expiration) {
+    public void setExpiration(Date expiration) {
         this.expiration = expiration;
     }
 
@@ -60,4 +60,12 @@ public class Survey {
         this.symbol = symbol;
     }
 
+    public boolean contains(ETradeSymbol tradeSymbol) {
+        for (Deposit deposit : getDeposits()) {
+            if (tradeSymbol.is(deposit.getSymbol())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-package za.co.knonchalant.space;
+package za.co.knonchalant.space.domain;
 
 public class RegisterRequest {
     String symbol;

@@ -4,24 +4,26 @@ package za.co.knonchalant.space.domain;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Date;
+
 
 @SuppressWarnings("unused")
 public class Route {
 
     @Expose
-    private String arrival;
+    private Date arrival;
     @Expose
     private Departure departure;
     @Expose
-    private String departureTime;
+    private Date departureTime;
     @Expose
     private Destination destination;
 
-    public String getArrival() {
+    public Date getArrival() {
         return arrival;
     }
 
-    public void setArrival(String arrival) {
+    public void setArrival(Date arrival) {
         this.arrival = arrival;
     }
 
@@ -33,11 +35,11 @@ public class Route {
         this.departure = departure;
     }
 
-    public String getDepartureTime() {
+    public Date getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(Date departureTime) {
         this.departureTime = departureTime;
     }
 
