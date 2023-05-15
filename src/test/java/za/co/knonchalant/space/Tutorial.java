@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This is an API walkthrough of the <a href="https://docs.spacetraders.io/quickstart/new-game">QuickStart</a>
+ */
 public class Tutorial {
     static String settingsLocation = "C:\\dev\\projects\\SpaceTrader\\settings-test.json";
 
