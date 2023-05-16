@@ -9,13 +9,13 @@ import java.util.List;
 public class ContractResponse {
 
     @Expose
-    private List<Contract> data;
+    private Contract data;
 
-    public List<Contract> getData() {
+    public Contract getData() {
         return data;
     }
 
-    public void setData(List<Contract> data) {
+    public void setData(Contract data) {
         this.data = data;
     }
 

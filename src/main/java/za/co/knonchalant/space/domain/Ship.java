@@ -127,6 +127,16 @@ public class Ship {
     }
 
     public boolean inTransit() {
-        return getNav().getRoute().getArrival().after(new Date());
+        boolean arrived = getNav().getRoute().getArrival().before(new Date());
+
+        if (arrived && EShipNavStatus.IN_TRANSIT.is(this)) {
+            getNav().setStatus(EShipNavStatus.IN_ORBIT.name());
+        }
+
+        return !arrived;
+    }
+
+    public boolean isAt(Waypoint waypoint) {
+        return getNav().getWaypointSymbol().equals(waypoint.getSymbol());
     }
 }

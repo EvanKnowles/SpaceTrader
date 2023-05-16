@@ -5,8 +5,7 @@ import za.co.knonchalant.space.agent.ContractsManager;
 import za.co.knonchalant.space.agent.ShipManager;
 import za.co.knonchalant.space.agent.SurveyManager;
 
-import static spark.Spark.get;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 public class RestAPI implements Runnable {
     private final Spacer spacer;
@@ -18,6 +17,13 @@ public class RestAPI implements Runnable {
     @Override
     public void run() {
         port(4567);
+
+        before((req, res) -> {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "*");
+            res.type("application/json");
+        });
+
         get("/agent", (request, response) -> new Gson().toJson(spacer.getAgentDetails()));
         get("/contracts", (request, response) -> new Gson().toJson(ContractsManager.getContracts()));
         get("/surveys", (request, response) -> new Gson().toJson(SurveyManager.getNeedSurvey()));

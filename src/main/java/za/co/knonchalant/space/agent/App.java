@@ -31,14 +31,23 @@ public class App {
     public static void main(String[] args) throws IOException {
         Settings settings = Settings.get(settingsLocation);
         String token = settings.getToken();
-        Spacer spacer = Spacer.token(token);
-        System.out.println(spacer.getAgentDetails());
+        Spacer api = Spacer.token(token);
+        System.out.println(api.getAgentDetails());
         System.out.println();
 
-        new Thread(new RestAPI(spacer)).start();
+        new Thread(new RestAPI(api)).start();
 
-        ContractsManager.refresh(spacer);
-        ShipManager.setShips(spacer.ships());
+        ContractsManager.refresh(api);
+        List<Contract> contracts = ContractsManager.getContracts();
+        // just accepting all the contracts for now
+        for (Contract contract : contracts) {
+            if (!contract.getAccepted()) {
+                api.accept(contract);
+            }
+        }
+
+        System.out.println(contracts);
+        ShipManager.setShips(api.ships());
 
         Map<String, IRole> shipRoles = new HashMap<>();
         while (true) {
@@ -56,7 +65,7 @@ public class App {
 
                     IRole iRole = shipRoles.get(ship.getSymbol());
                     if (iRole.getResumeAfter() == null || iRole.getResumeAfter().before(new Date())) {
-                        iRole.perform(spacer, ship);
+                        iRole.perform(api, ship);
                     }
                 }
             } catch (RestServerException restServerException) {

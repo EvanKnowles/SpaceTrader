@@ -1,5 +1,6 @@
 package za.co.knonchalant.space.agent;
 
+import za.co.knonchalant.space.domain.EShipType;
 import za.co.knonchalant.space.domain.Ship;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public class ShipManager {
     public static void setShips(List<Ship> ships) {
         ShipManager.ships = ships;
     }
+
 }

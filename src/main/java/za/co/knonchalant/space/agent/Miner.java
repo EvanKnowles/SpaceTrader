@@ -67,7 +67,6 @@ public class Miner implements IRole {
             if (ship.getCargo().getCapacity() - ship.getCargo().getUnits() == 0) {
                 log(ship, "Full, going to sell");
                 spacer.dock(ship);
-                spacer.refuel(ship);
 
                 for (Inventory inventory : ship.getCargo().filter(target, ETradeSymbol.ANTIMATTER)) {
                     log(ship, "Selling: " + inventory);
@@ -90,7 +89,7 @@ public class Miner implements IRole {
                     ExtractResponse extract = spacer.extract(ship, survey);
 
                     Yield yield = extract.getExtraction().getYield();
-                    log(ship, "Extracted " + yield.getSymbol() + " " + yield.getUnits());
+                    log(ship, "Extracted " + yield.getSymbol() + " " + yield.getUnits() + (survey != null ? " (surveyed)" : ""));
                     resumeAfter = cooldown(extract.getCooldown().getRemainingSeconds());
                 } catch (RestClientException ex) {
                     ErrorResponse from = ErrorResponse.from(ex.getMessage());

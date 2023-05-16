@@ -260,8 +260,8 @@ public class Spacer {
     }
 
     public Contract contract(String id) throws IOException {
-        return rest("https://api.spacetraders.io/v2/my/contracts", id)
-                .get(ContractResponse.class).getData().get(0);
+        return rest("https://api.spacetraders.io/v2/my/contracts/%s", id)
+                .get(ContractResponse.class).getData();
     }
 
     public DeliverResponse deliver(String id, Ship ship, String tradeSymbol, long units) throws IOException {

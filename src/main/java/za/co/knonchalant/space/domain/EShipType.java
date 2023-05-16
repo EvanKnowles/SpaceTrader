@@ -26,6 +26,10 @@ public enum EShipType {
     }
 
     public AvailableShip get(Shipyard shipyard) {
+        if (shipyard.getShips() == null) {
+            return null;
+        }
+
         for (AvailableShip availableShip : shipyard.getShips()) {
             if (is(availableShip.getType())) {
                 return availableShip;
@@ -33,4 +37,5 @@ public enum EShipType {
         }
         return null;
     }
+
 }
