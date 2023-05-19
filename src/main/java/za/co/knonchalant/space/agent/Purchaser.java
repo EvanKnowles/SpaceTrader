@@ -21,7 +21,9 @@ public class Purchaser implements IRole {
         }
 
         if (purchasePrice > spacer.getAgentDetails().getCredits()) {
-            new Surveyer().perform(spacer, ship);
+            Surveyer surveyer = new Surveyer();
+            surveyer.perform(spacer, ship);
+            resumeAfter = surveyer.getResumeAfter();
             return;
         }
 
@@ -43,14 +45,15 @@ public class Purchaser implements IRole {
 
         Shipyard shipyard = spacer.shipyard(waypoint);
         EShipType targetShip = EShipType.SHIP_MINING_DRONE;
-        if (ShipManager.getShips().size() > 1) {
+        if (ShipManager.getShips().size() > 5) {
             targetShip = EShipType.SHIP_ORE_HOUND;
         }
 
         AvailableShip availableShip = targetShip.get(shipyard);
         if (availableShip != null && availableShip.getPurchasePrice() < spacer.getAgentDetails().getCredits()) {
             log(ship, "Purchasing: " + targetShip);
-            spacer.purchaseShip(targetShip, shipyard);
+            Ship newShip = spacer.purchaseShip(targetShip, shipyard);
+            ShipManager.addShip(newShip);
         } else if (availableShip != null) {
             purchasePrice = availableShip.getPurchasePrice();
         } else if (availableShip == null) {

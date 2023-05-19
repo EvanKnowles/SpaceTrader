@@ -14,6 +14,7 @@ public class SurveyManager {
         List<Survey> surveys = surveyMap.get(waypointSymbol);
 
         if (surveys == null || surveys.isEmpty()) {
+            needSurvey.add(new WantedSurvey(waypointSymbol, null));
             return null;
         }
         return surveys.get(new Random().nextInt(surveys.size()));

@@ -22,11 +22,11 @@ public class Miner implements IRole {
 
         Contract contract = spacer.contracts().get(0);
         ETradeSymbol target = null;
-        long amount = -1;
-        for (Deliver deliver : contract.getTerms().getDeliver()) {
-            target = ETradeSymbol.valueOf(deliver.getTradeSymbol());
-            amount = deliver.getUnitsRequired() - deliver.getUnitsFulfilled();
-        }
+        long amount = Long.MAX_VALUE;
+//        for (Deliver deliver : contract.getTerms().getDeliver()) {
+//            target = ETradeSymbol.valueOf(deliver.getTradeSymbol());
+//            amount = deliver.getUnitsRequired() - deliver.getUnitsFulfilled();
+//        }
 
         Inventory targetInventory = ship.getCargo().find(target);
         if (targetInventory != null && targetInventory.getUnits().equals(ship.getCargo().getUnits())) {
@@ -76,10 +76,12 @@ public class Miner implements IRole {
 
             if (EShipNavStatus.IN_ORBIT.is(ship)) {
                 try {
-                    List<Survey> surveys = SurveyManager.get(ship.getNav().getWaypointSymbol(), target);
                     Survey survey = null;
-                    if (!surveys.isEmpty()) {
-                        survey = surveys.get(0);
+                    if (target != null) {
+                        List<Survey> surveys = SurveyManager.get(ship.getNav().getWaypointSymbol(), target);
+                        if (!surveys.isEmpty()) {
+                            survey = surveys.get(0);
+                        }
                     }
 
                     if (survey == null) {
@@ -90,11 +92,13 @@ public class Miner implements IRole {
 
                     Yield yield = extract.getExtraction().getYield();
                     log(ship, "Extracted " + yield.getSymbol() + " " + yield.getUnits() + (survey != null ? " (surveyed)" : ""));
+                    ship.setCooldown(extract.getCooldown());
                     resumeAfter = cooldown(extract.getCooldown().getRemainingSeconds());
                 } catch (RestClientException ex) {
                     ErrorResponse from = ErrorResponse.from(ex.getMessage());
                     if (from.getError().getData().getCooldown() != null) {
                         resumeAfter = from.getError().getData().getCooldown().getExpiration();
+                        ship.setCooldown(from.getError().getData().getCooldown());
                     }else {
                         resumeAfter = cooldown(5);
                     }

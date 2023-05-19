@@ -27,24 +27,39 @@ public class Surveyer implements IRole {
         }
 
         if (target == null) {
+            ship.setDisplayMessage("Not surveying, no targets");
+            Miner miner = new Miner();
+            miner.perform(spacer, ship);
+            resumeAfter = miner.getResumeAfter();
             return;
         }
 
         if (!Objects.equals(target, ship.getNav().getWaypointSymbol())) {
+            ship.setDisplayMessage("Docking to refuel");
+            spacer.dock(ship);
+            ship.setDisplayMessage("Refuelling...");
+            spacer.refuel(ship);
+            ship.setDisplayMessage("Heading to orbit...");
+            spacer.orbit(ship);
             log(ship, "Going to survey: " + target);
             spacer.navigate(ship, target);
             return;
         }
 
         try {
+            log(ship, "Surveying " + target);
             SurveyResponse surveyResponse = spacer.survey(ship.getSymbol());
+            ship.setCooldown(surveyResponse.getCooldown());
+
             SurveyManager.addAll(surveyResponse.getSurveys());
             resumeAfter = cooldown(surveyResponse.getCooldown().getRemainingSeconds());
         } catch (RestClientException ex) {
+            ex.printStackTrace();
             ErrorResponse from = ErrorResponse.from(ex.getMessage());
+            ship.setDisplayMessage("Error during survey");
+            ship.setCooldown(from.getError().getData().getCooldown());
             resumeAfter = from.getError().getData().getCooldown().getExpiration();
         }
-
     }
 
     @Override

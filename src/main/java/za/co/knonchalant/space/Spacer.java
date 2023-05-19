@@ -3,6 +3,7 @@ package za.co.knonchalant.space;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import za.co.knonchalant.space.agent.ContractsManager;
+import za.co.knonchalant.space.agent.TransactionManager;
 import za.co.knonchalant.space.client.REST;
 import za.co.knonchalant.space.domain.*;
 import za.co.knonchalant.space.domain.System;
@@ -96,18 +97,23 @@ public class Spacer {
                 .body(new WaypointRequest(waypointSymbol))
                 .post(new TypeToken<>() {
                 });
+        ship.setDisplayMessage("Navigating to " + waypointSymbol);
         ship.setNav(response.getData().getNav());
         ship.setFuel(response.getData().getFuel());
         return response.getData();
     }
 
     public MarketResponse purchase(Ship ship, String symbol, long units) throws IOException {
+        ship.setDisplayMessage("Buying " + units + " " + symbol);
+        long before = agentDetails.getCredits();
         DataResponse<MarketResponse> response = rest("https://api.spacetraders.io/v2/my/ships/%s/purchase", ship.getSymbol())
                 .body(new MarketPurchaseRequest(symbol, units))
                 .post(new TypeToken<>() {
                 });
+
         ship.setCargo(response.getData().getCargo());
         updateAgentDetails(response.getData().getAgent());
+        TransactionManager.add("Bought " + units + " " + symbol, agentDetails.getCredits() - before);
 
         return response.getData();
     }
@@ -133,21 +139,24 @@ public class Spacer {
     }
 
     public SellResponse sell(Ship ship, Inventory inventory) throws IOException {
+        long before = agentDetails.getCredits();
         DataResponse<SellResponse> response = rest("https://api.spacetraders.io/v2/my/ships/%s/sell", ship.getSymbol())
                 .body(inventory)
                 .post(new TypeToken<>() {
                 });
         ship.setCargo(response.getData().getCargo());
         updateAgentDetails(response.getData().getAgent());
-
+        TransactionManager.add("Sold " + inventory, agentDetails.getCredits() - before);
         return response.getData();
     }
 
     public RefuelResponse refuel(Ship ship) throws IOException {
+        long before = agentDetails.getCredits();
         DataResponse<RefuelResponse> response = rest("https://api.spacetraders.io/v2/my/ships/%s/refuel", ship.getSymbol())
                 .post(new TypeToken<>() {
                 });
         updateAgentDetails(response.getData().getAgent());
+        TransactionManager.add("Refuelled " + ship.getSymbol(), agentDetails.getCredits() - before);
         ship.setFuel(response.getData().getFuel());
         return response.getData();
     }
@@ -301,12 +310,14 @@ public class Spacer {
     }
 
     public Ship purchaseShip(String shipType, String waypointSymbol) throws IOException {
+        long before = agentDetails.getCredits();
         PurchaseRequest purchaseRequest = new PurchaseRequest(shipType, waypointSymbol);
         DataResponse<PurchaseResponse> post = url("https://api.spacetraders.io/v2/my/ships").body(purchaseRequest)
                 .post(new TypeToken<>() {
                 });
 
-        this.agentDetails = post.getData().getAgent();
+        updateAgentDetails(post.getData().getAgent());
+        TransactionManager.add("Bought ship: " + shipType, agentDetails.getCredits() - before);
         return post.getData().getShip();
     }
 

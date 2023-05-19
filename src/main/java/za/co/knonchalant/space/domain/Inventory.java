@@ -51,6 +51,6 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return units + " " + symbol;
+        return units + " " + name;
     }
 }

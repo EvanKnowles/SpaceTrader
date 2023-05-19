@@ -9,6 +9,7 @@ import za.co.knonchalant.space.domain.*;
 
 import java.io.IOException;
 import java.lang.System;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,17 +19,18 @@ import java.util.Map;
  * Hello world!
  */
 public class App {
-    static String settingsLocation = "C:\\dev\\projects\\SpaceTrader\\settings.json";
+    static String settingsLocationB = "C:\\dev\\projects\\SpaceTrader\\settings.json";
 
     public static void mainRegister(String[] args) throws IOException {
         Spacer register = Spacer.register("Viat", "COSMIC");
 
         Settings settings = new Settings();
         settings.setToken(register.getToken());
-        settings.persist(settingsLocation);
+        settings.persist(settingsLocationB);
     }
 
     public static void main(String[] args) throws IOException {
+        String settingsLocation = args[0];
         Settings settings = Settings.get(settingsLocation);
         String token = settings.getToken();
         Spacer api = Spacer.token(token);
@@ -64,11 +66,13 @@ public class App {
                     }
 
                     IRole iRole = shipRoles.get(ship.getSymbol());
-                    if (iRole.getResumeAfter() == null || iRole.getResumeAfter().before(new Date())) {
+                    if (iRole.getResumeAfter() == null || iRole.getResumeAfter().before(new Date())
+                    || ship.getCooldown() == null || ship.getCooldown().getExpiration().before(new Date())) {
+                        ship.setCooldown(null);
                         iRole.perform(api, ship);
                     }
                 }
-            } catch (RestServerException restServerException) {
+            } catch (RestServerException | ConnectException restServerException) {
                 System.out.println("Server sad");
                 restServerException.printStackTrace();
                 try {

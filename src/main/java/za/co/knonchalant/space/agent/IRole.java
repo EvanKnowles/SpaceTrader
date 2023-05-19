@@ -15,6 +15,7 @@ public interface IRole {
     default void log(Ship ship, String message) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
         System.out.println(sdf.format(new Date()) + " " + ship.getSymbol() + ": " + message);
+        ship.setDisplayMessage(message);
     }
 
     default Date cooldown(long seconds) {

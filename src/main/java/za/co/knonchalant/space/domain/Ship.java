@@ -33,6 +33,9 @@ public class Ship {
     @Expose
     private String symbol;
 
+    private String displayMessage;
+    private Cooldown cooldown;
+
     public Cargo getCargo() {
         return cargo;
     }
@@ -119,6 +122,22 @@ public class Ship {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getDisplayMessage() {
+        return displayMessage;
+    }
+
+    public void setDisplayMessage(String displayMessage) {
+        this.displayMessage = displayMessage;
+    }
+
+    public Cooldown getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(Cooldown cooldown) {
+        this.cooldown = cooldown;
     }
 
     @Override

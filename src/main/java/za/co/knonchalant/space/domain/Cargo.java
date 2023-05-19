@@ -41,6 +41,10 @@ public class Cargo {
     }
 
     public Inventory find(ETradeSymbol target) {
+        if (target == null) {
+            return null;
+        }
+
         for (Inventory inventory1 : inventory) {
             if (target.is(inventory1)) {
                 return inventory1;
@@ -54,7 +58,7 @@ public class Cargo {
         for (Inventory inventory1 : inventory) {
             boolean keep = true;
             for (ETradeSymbol removeSymbol : removeSymbols) {
-                if (removeSymbol.is(inventory1.getSymbol())) {
+                if (removeSymbol != null && removeSymbol.is(inventory1.getSymbol())) {
                     keep = false;
                     break;
                 }
