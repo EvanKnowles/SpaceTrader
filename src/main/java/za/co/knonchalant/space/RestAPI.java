@@ -1,10 +1,7 @@
 package za.co.knonchalant.space;
 
 import com.google.gson.Gson;
-import za.co.knonchalant.space.agent.ContractsManager;
-import za.co.knonchalant.space.agent.ShipManager;
-import za.co.knonchalant.space.agent.SurveyManager;
-import za.co.knonchalant.space.agent.TransactionManager;
+import za.co.knonchalant.space.agent.*;
 import za.co.knonchalant.space.agent.domain.AllTransactions;
 
 import static spark.Spark.*;
@@ -28,6 +25,7 @@ public class RestAPI implements Runnable {
             res.type("application/json");
         });
 
+        get("/error", (request, response) -> new Gson().toJson(ExceptionManager.getErrors()));
         get("/agent", (request, response) -> new Gson().toJson(spacer.getAgentDetails()));
         get("/contracts", (request, response) -> new Gson().toJson(ContractsManager.getContracts()));
         get("/surveys", (request, response) -> new Gson().toJson(SurveyManager.getNeedSurvey()));

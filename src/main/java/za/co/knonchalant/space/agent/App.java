@@ -3,13 +3,12 @@ package za.co.knonchalant.space.agent;
 import za.co.knonchalant.space.RestAPI;
 import za.co.knonchalant.space.Spacer;
 import za.co.knonchalant.space.agent.domain.Settings;
-import za.co.knonchalant.space.client.exception.RestClientException;
-import za.co.knonchalant.space.client.exception.RestServerException;
 import za.co.knonchalant.space.domain.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.System;
-import java.net.ConnectException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +20,8 @@ import java.util.Map;
 public class App {
     static String settingsLocationB = "C:\\dev\\projects\\SpaceTrader\\settings.json";
 
-    public static void mainRegister(String[] args) throws IOException {
-        Spacer register = Spacer.register("Viat", "COSMIC");
+    public static void mainR(String[] args) throws IOException {
+        Spacer register = Spacer.register("Viat", "QUANTUM");
 
         Settings settings = new Settings();
         settings.setToken(register.getToken());
@@ -72,8 +71,13 @@ public class App {
                         iRole.perform(api, ship);
                     }
                 }
-            } catch (RestServerException | ConnectException restServerException) {
+            } catch (Exception restServerException) {
                 System.out.println("Server sad");
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                restServerException.printStackTrace(pw);
+
+                ExceptionManager.addError(sw.toString());
                 restServerException.printStackTrace();
                 try {
                     Thread.sleep(30 * 1000);

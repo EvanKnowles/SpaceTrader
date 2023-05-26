@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import za.co.knonchalant.space.agent.ContractsManager;
 import za.co.knonchalant.space.agent.TransactionManager;
 import za.co.knonchalant.space.client.REST;
+import za.co.knonchalant.space.client.exception.RestClientException;
 import za.co.knonchalant.space.domain.*;
 import za.co.knonchalant.space.domain.System;
 
@@ -152,13 +153,18 @@ public class Spacer {
 
     public RefuelResponse refuel(Ship ship) throws IOException {
         long before = agentDetails.getCredits();
-        DataResponse<RefuelResponse> response = rest("https://api.spacetraders.io/v2/my/ships/%s/refuel", ship.getSymbol())
-                .post(new TypeToken<>() {
-                });
-        updateAgentDetails(response.getData().getAgent());
-        TransactionManager.add("Refuelled " + ship.getSymbol(), agentDetails.getCredits() - before);
-        ship.setFuel(response.getData().getFuel());
-        return response.getData();
+        try {
+            DataResponse<RefuelResponse> response = rest("https://api.spacetraders.io/v2/my/ships/%s/refuel", ship.getSymbol())
+                    .post(new TypeToken<>() {
+                    });
+            updateAgentDetails(response.getData().getAgent());
+            TransactionManager.add("Refuelled " + ship.getSymbol(), agentDetails.getCredits() - before);
+            ship.setFuel(response.getData().getFuel());
+            return response.getData();
+        } catch (RestClientException ex) {
+            ship.setDisplayMessage("Not enough money for fuel");
+            return null;
+        }
     }
 
     private void updateAgentDetails(Agent agent) {
@@ -205,8 +211,23 @@ public class Spacer {
     }
 
     public List<Ship> ships() throws IOException {
-        return url("https://api.spacetraders.io/v2/my/ships")
-                .get(ShipResponse.class).getData();
+        DataResponse<List<Ship>> shipResponse = url("https://api.spacetraders.io/v2/my/ships")
+                .get(new TypeToken<>() {
+                });
+        Meta meta = shipResponse.getMeta();
+        List<Ship> result = shipResponse.getData();
+
+
+        int i = 2;
+        while (result.size() < meta.getTotal()) {
+            shipResponse = rest("https://api.spacetraders.io/v2/my/ships?page=%s", String.valueOf(i))
+                    .get(new TypeToken<>() {
+                    });
+            result.addAll(shipResponse.getData());
+            i++;
+        }
+
+        return result;
     }
 
     private REST url(String url) {

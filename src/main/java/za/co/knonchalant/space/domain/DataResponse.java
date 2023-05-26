@@ -9,6 +9,8 @@ public class DataResponse<T> {
     @SerializedName("message")
     private String message;
 
+    private Meta meta;
+
     public Long getCode() {
         return code;
     }
@@ -32,5 +34,13 @@ public class DataResponse<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Meta getMeta() {
+        return meta;
+    }
+
+    public void setMeta(Meta meta) {
+        this.meta = meta;
     }
 }

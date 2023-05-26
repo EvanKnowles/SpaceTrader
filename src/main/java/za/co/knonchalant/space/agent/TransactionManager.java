@@ -12,6 +12,11 @@ public class TransactionManager {
         if (credits == 0) {
             return;
         }
+
+        while (transactionList.size() > 10_000) {
+            transactionList.remove(0);
+        }
+
         transactionList.add(new Transaction(description, credits, transactionList.size() + 1));
     }
 
@@ -23,6 +28,7 @@ public class TransactionManager {
         if (transactionList.isEmpty()) {
             return transactionList;
         }
+
         return transactionList.subList(Math.max(transactionList.size() - 11, 0), transactionList.size() - 1);
     }
 
