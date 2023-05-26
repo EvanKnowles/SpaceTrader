@@ -8,16 +8,20 @@ import static spark.Spark.*;
 
 public class RestAPI implements Runnable {
     private final Spacer spacer;
+    private final boolean notSecure;
 
-    public RestAPI(Spacer spacer) {
+    public RestAPI(Spacer spacer, boolean notSecure) {
         this.spacer = spacer;
+        this.notSecure = notSecure;
     }
 
     @Override
     public void run() {
         port(4567);
 
-//        secure("/etc/letsencrypt/live/knowles.co.za/knowles.jks", "password", null, null);
+        if (!notSecure) {
+            secure("/etc/letsencrypt/live/knowles.co.za/knowles.jks", "password", null, null);
+        }
 
         before((req, res) -> {
             res.header("Access-Control-Allow-Origin", "*");

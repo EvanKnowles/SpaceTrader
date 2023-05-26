@@ -30,13 +30,15 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         String settingsLocation = args[0];
+        boolean notSecure = args[1] != null;
+
         Settings settings = Settings.get(settingsLocation);
         String token = settings.getToken();
         Spacer api = Spacer.token(token);
         System.out.println(api.getAgentDetails());
         System.out.println();
 
-        new Thread(new RestAPI(api)).start();
+        new Thread(new RestAPI(api, notSecure)).start();
 
         ContractsManager.refresh(api);
         List<Contract> contracts = ContractsManager.getContracts();
