@@ -2,7 +2,7 @@ package za.co.knonchalant.space.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataResponse<T> {
+public class DataResponse<T> implements IPaged<T> {
     private T data;
     @SerializedName("code")
     private Long code;

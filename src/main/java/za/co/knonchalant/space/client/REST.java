@@ -9,6 +9,7 @@ import za.co.knonchalant.space.client.exception.BadCredentialsException;
 import za.co.knonchalant.space.client.exception.RestClientException;
 import za.co.knonchalant.space.client.exception.RestServerException;
 import za.co.knonchalant.space.client.exception.RestUrlNotFoundException;
+import za.co.knonchalant.space.domain.IPaged;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
@@ -308,7 +309,6 @@ public class REST implements Serializable {
      * @return deserialized verb
      */
     public <T> T verb(Type clazz, EVerb verb) throws IOException {
-
         while (calls.size() >= MAX_CALLS) {
             for (int i = 0; i < calls.size(); ) {
                 Call call = calls.get(i);
@@ -335,7 +335,25 @@ public class REST implements Serializable {
             gsonBuilder.registerTypeAdapter(clazz, deserializer);
         }
         Gson gson = gsonBuilder.create();
-        return gson.fromJson(response, clazz);
+        T result = gson.fromJson(response, clazz);
+
+        if (result instanceof IPaged<?> paging && arguments.get("page") == null) {
+            Object data = ((IPaged<?>) result).getData();
+            if (data instanceof Collection resultColl) {
+                int page = 2;
+                while (resultColl.size() < paging.getMeta().getTotal()) {
+                    if (arguments == null) {
+                        arguments = new HashMap<>();
+                    }
+                    arguments.put("page", String.valueOf(page));
+
+                    T pagedResponse = verb(clazz, verb);
+                    resultColl.addAll((Collection) ((IPaged)pagedResponse).getData());
+                }
+            }
+        }
+
+        return result;
     }
 
     /**

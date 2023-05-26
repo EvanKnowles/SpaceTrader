@@ -17,7 +17,7 @@ public class RestAPI implements Runnable {
     public void run() {
         port(4567);
 
-        secure("/etc/letsencrypt/live/knowles.co.za/knowles.jks", "password", null, null);
+//        secure("/etc/letsencrypt/live/knowles.co.za/knowles.jks", "password", null, null);
 
         before((req, res) -> {
             res.header("Access-Control-Allow-Origin", "*");

@@ -214,25 +214,15 @@ public class Spacer {
         DataResponse<List<Ship>> shipResponse = url("https://api.spacetraders.io/v2/my/ships")
                 .get(new TypeToken<>() {
                 });
-        Meta meta = shipResponse.getMeta();
-        List<Ship> result = shipResponse.getData();
 
-
-        int i = 2;
-        while (result.size() < meta.getTotal()) {
-            shipResponse = rest("https://api.spacetraders.io/v2/my/ships?page=%s", String.valueOf(i))
-                    .get(new TypeToken<>() {
-                    });
-            result.addAll(shipResponse.getData());
-            i++;
-        }
-
-        return result;
+        return shipResponse.getData();
     }
 
     private REST url(String url) {
-        return REST.url(url)
+        REST authorization = REST.url(url)
                 .authorization(token);
+        authorization.argument("limit", "20");
+        return authorization;
     }
 
     public Waypoint waypoint(String systemSymbol, String wayPointSymbol) throws IOException {
